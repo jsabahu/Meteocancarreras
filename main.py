@@ -139,8 +139,8 @@ def read_bmp280():
 
 ####BLOC DS18B20 ################################################################################################
 
-databaseUsername="root" #YOUR MYSQL USERNAME, USUALLY ROOT
-databasePassword="JSH1996JSH1996" #YOUR MYSQL PASSWORD
+databaseUsername="" #YOUR MYSQL USERNAME, USUALLY ROOT
+databasePassword="" #YOUR MYSQL PASSWORD
 databaseName="WordpressDB" #do not change unless you named the Wordpress database with some other name
 
 os.system('modprobe w1-gpio')
