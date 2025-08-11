@@ -147,7 +147,10 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
+device_folders = glob.glob(base_dir + '28*')
+if not device_folders:
+    raise FileNotFoundError(f"No DS18B20 sensor found in {base_dir}")
+device_folder = device_folders[0]
 device_file = device_folder + '/w1_slave'
 
 def saveToDatabase(temperature,temperaturedh,humidity,temperaturebmp,pressure,rainfall):
@@ -247,28 +250,28 @@ GPIO.add_event_detect(PIN, GPIO.FALLING, callback=cb, bouncetime=300)
 # display and log results
 while True:
 
-	currentDate=datetime.datetime.now().date()
+    currentDate=datetime.datetime.now().date()
 
-        now=datetime.datetime.now()
-        midnight=datetime.datetime.combine(now.date(),datetime.time())
-        minutes=((now-midnight).seconds)/60 #minutes after midnight, use datead$
-
-
-	humiditydh, temperaturedh = Adafruit_DHT.read_retry(sensor, pindh)
-	temperaturebmp,pressurebmp = read_bmp280()
-	temperatureds = read_temp()
-
-	saveToDatabase(read_temp(),temperaturedh,humiditydh,temperaturebmp,pressurebmp,rain)
+    now=datetime.datetime.now()
+    midnight=datetime.datetime.combine(now.date(),datetime.time())
+    minutes=((now-midnight).seconds)/60 #minutes after midnight, use datead$
 
 
+    humiditydh, temperaturedh = Adafruit_DHT.read_retry(sensor, pindh)
+    temperaturebmp,pressurebmp = read_bmp280()
+    temperatureds = read_temp()
+
+    saveToDatabase(read_temp(),temperaturedh,humiditydh,temperaturebmp,pressurebmp,rain)
 
 
-	#line = "%i,%f" % (minutes, rain)
-	#print(line)
-	#file.write(line + "\n")
-	#file.flush()
-	rain = 0
-	time.sleep(300)
+
+
+    #line = "%i,%f" % (minutes, rain)
+    #print(line)
+    #file.write(line + "\n")
+    #file.flush()
+    rain = 0
+    time.sleep(300)
 # close the log file and exit nicely
 
 GPIO.cleanup()
